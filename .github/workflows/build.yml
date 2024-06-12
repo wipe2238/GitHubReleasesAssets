@@ -1,0 +1,73 @@
+name: Build
+
+on:
+ push:
+  paths:
+  - '.github/workflows/build.yml'
+  - 'go.mod'
+  - 'go.sum'
+  - '**.go'
+ pull_request:
+  paths:
+  - '.github/workflows/build.yml'
+  - 'go.mod'
+  - 'go.sum'
+  - '**.go'
+
+defaults:
+ run:
+  shell: bash
+
+jobs:
+ Compile:
+  runs-on: ${{ matrix.os }}
+  outputs:
+   go-version: ${{ steps.setup-go.outputs.go-version }}
+
+  strategy:
+   fail-fast: false
+   matrix:
+    os: [ubuntu-latest, windows-latest]
+
+  steps:
+
+  - uses: actions/checkout@v4
+
+  - run: |
+         : init
+         mkdir -p bin
+
+  - id:   setup-go
+    uses: actions/setup-go@v5
+    with:
+     go-version-file: 'go.mod'
+     check-latest:    true
+
+  - run: go version
+
+  - run: go mod download -x
+
+  - run: go build -v -trimpath -o bin ./...
+
+ Test:
+  needs: Compile
+  runs-on: ${{ matrix.os }}
+  strategy:
+   fail-fast: false
+   matrix:
+    os: [ubuntu-latest, windows-latest]
+
+  steps:
+
+  - uses: actions/checkout@v4
+
+  - uses: actions/setup-go@v5
+    with:
+     go-version:   ${{ needs.Compile.outputs.go-version }}
+     check-latest: true
+
+  - run: go version
+
+  - run: go mod download -x
+
+  - run: go test -vet=all ./...
