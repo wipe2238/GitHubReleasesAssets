@@ -12,8 +12,6 @@ var CmdLine struct {
 }
 
 func init() {
-	fmt.Println("Init command line...")
-
 	var re2 = regexp.MustCompile("^[A-Za-z0-9-_]+/[A-Za-z0-9-_]+$")
 	var re3 = regexp.MustCompile("^[A-Za-z0-9-_]+$")
 

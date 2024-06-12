@@ -14,8 +14,6 @@ var client *http.Client
 var parser *fastjson.Parser
 
 func init() {
-	fmt.Println("Init http client...")
-
 	client = &http.Client{
 		Timeout: 15 * time.Second,
 	}
