@@ -43,10 +43,9 @@ func GetJSON(Url string) *fastjson.Value {
 		os.Exit(1)
 	}
 
-
 	var Body []byte
 	if Body, Error = io.ReadAll(Response.Body); Error != nil {
-		fmt.Errorf("[io.ReadAll] %w", Error)
+		fmt.Println("[io.ReadAll]", Error)
 		os.Exit(1)
 	}
 
