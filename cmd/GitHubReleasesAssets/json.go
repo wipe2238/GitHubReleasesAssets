@@ -29,7 +29,7 @@ func GetJSON(Url string) *fastjson.Value {
 	if Request, Error = http.NewRequest(http.MethodGet, Url, nil); Error == nil {
 		Request.Header.Set("Content-Type", "application/json")
 	} else {
-		fmt.Println("[http::NewRequest]", Error)
+		fmt.Println("[http.NewRequest]", Error)
 		os.Exit(1)
 	}
 

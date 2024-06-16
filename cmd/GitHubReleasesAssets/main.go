@@ -56,7 +56,7 @@ func main() {
 			continue
 		}
 
-		var ReleaseName string = fmt.Sprintf("%s", Release.GetStringBytes("name"))
+		var ReleaseName string = string(Release.GetStringBytes("name"))
 
 		for _, Asset := range AssetArray {
 			AssetFound = true
