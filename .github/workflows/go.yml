@@ -1,15 +1,15 @@
-name: Build
+name: Go
 
 on:
  push:
   paths:
-  - '.github/workflows/build.yml'
+  - '.github/workflows/go.yml'
   - 'go.mod'
   - 'go.sum'
   - '**.go'
  pull_request:
   paths:
-  - '.github/workflows/build.yml'
+  - '.github/workflows/go.yml'
   - 'go.mod'
   - 'go.sum'
   - '**.go'
@@ -19,7 +19,7 @@ defaults:
   shell: bash
 
 jobs:
- Compile:
+ Build:
   runs-on: ${{ matrix.os }}
   outputs:
    go-version: ${{ steps.setup-go.outputs.go-version }}
@@ -33,10 +33,6 @@ jobs:
 
   - uses: actions/checkout@v4
 
-  - run: |
-         : init
-         mkdir -p bin
-
   - id:   setup-go
     uses: actions/setup-go@v5
     with:
@@ -47,10 +43,10 @@ jobs:
 
   - run: go mod download -x
 
-  - run: go build -v -trimpath -o bin ./...
+  - run: go build -v -trimpath -o bin/ ./...
 
- Test:
-  needs: Compile
+ Generate:
+  needs: Build
   runs-on: ${{ matrix.os }}
   strategy:
    fail-fast: false
@@ -63,7 +59,29 @@ jobs:
 
   - uses: actions/setup-go@v5
     with:
-     go-version:   ${{ needs.Compile.outputs.go-version }}
+     go-version-file: 'go.mod'
+     check-latest:    false
+     cache:           false
+
+  - run: go version
+
+  - run: go generate makefile.go
+
+ Test:
+  needs: Build
+  runs-on: ${{ matrix.os }}
+  strategy:
+   fail-fast: false
+   matrix:
+    os: [ubuntu-latest, windows-latest]
+
+  steps:
+
+  - uses: actions/checkout@v4
+
+  - uses: actions/setup-go@v5
+    with:
+     go-version:   ${{ needs.Build.outputs.go-version }}
      check-latest: true
 
   - run: go version
