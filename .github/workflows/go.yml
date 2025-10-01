@@ -34,7 +34,7 @@ jobs:
   - uses: actions/checkout@v4
 
   - id:   setup-go
-    uses: actions/setup-go@v5
+    uses: actions/setup-go@v6
     with:
      go-version-file: 'go.mod'
      check-latest:    true
@@ -57,7 +57,7 @@ jobs:
 
   - uses: actions/checkout@v4
 
-  - uses: actions/setup-go@v5
+  - uses: actions/setup-go@v6
     with:
      go-version-file: 'go.mod'
      check-latest:    false
@@ -79,7 +79,7 @@ jobs:
 
   - uses: actions/checkout@v4
 
-  - uses: actions/setup-go@v5
+  - uses: actions/setup-go@v6
     with:
      go-version:   ${{ needs.Build.outputs.go-version }}
      check-latest: true
